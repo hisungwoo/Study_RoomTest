@@ -2,6 +2,7 @@ package org.ganache.roomtest
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import androidx.room.Room
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -16,11 +17,12 @@ class MainActivity : AppCompatActivity() {
             AppDatabase::class.java, "database-name"
         ).allowMainThreadQueries().build()
 
-        result_text.text = db.todoDao().getAll().toString()
+        db.todoDao().getAll().observe(this, Observer {
+            result_text.text = it.toString()
+        })
 
         add_button.setOnClickListener {
             db.todoDao().insert(Todo(todo_edit.text.toString()))
-            result_text.text = db.todoDao().getAll().toString()
         }
     }
 }
